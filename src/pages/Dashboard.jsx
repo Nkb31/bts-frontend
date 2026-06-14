@@ -17,7 +17,7 @@ function Dashboard() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        `https://bank-transaction-system-4938.onrender.com/api/accounts/balance/${accountId}`,
+        `${import.meta.env.VITE_API_URL}/api/accounts/balance/${accountId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -37,8 +37,7 @@ function Dashboard() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        "https://bank-transaction-system-4938.onrender.com/api/accounts",
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/accounts`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,7 +104,7 @@ const createAccount = async () => {
     const token = localStorage.getItem("token");
 
     const res = await axios.post(
-      "https://bank-transaction-system-4938.onrender.com/api/accounts",
+      `${import.meta.env.VITE_API_URL}/api/accounts`,
       {},
       {
         headers: {

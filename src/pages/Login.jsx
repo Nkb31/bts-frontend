@@ -10,7 +10,7 @@ function Login() {
 
     try {
       const res = await axios.post(
-        "https://bank-transaction-system-4938.onrender.com/api/auth/login",
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
         { email, password }
       );
 

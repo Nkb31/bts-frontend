@@ -20,7 +20,7 @@ function Register() {
 
     try {
       const res = await axios.post(
-        "https://bank-transaction-system-4938.onrender.com/api/auth/register",
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
         formData,
       );
 
