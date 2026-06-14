@@ -1,16 +1,173 @@
-# React + Vite
+# 🏦 Bank Transaction System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack MERN Banking Transaction System that allows users to register, log in, create bank accounts, view balances, and perform secure transactions using JWT authentication and MongoDB Atlas.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Authentication
 
-## React Compiler
+* User Registration
+* User Login
+* JWT Authentication
+* Protected Routes
+* Logout Functionality
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Account Management
 
-## Expanding the ESLint configuration
+* Create Bank Account
+* View User Accounts
+* Account Status Tracking
+* Multi-Account Support
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Ledger System
+
+* Balance Calculation from Ledger Entries
+* Credit Transactions
+* Debit Transactions
+* Transaction Validation
+
+### Security
+
+* JWT-based Authentication
+* Token Blacklisting
+* Protected APIs
+* Idempotency Key Support
+
+### Deployment
+
+* Backend deployed on Render
+* Database hosted on MongoDB Atlas
+* Frontend built with React + Vite
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React.js
+* Vite
+* Axios
+* React Router
+
+### Backend
+
+* Node.js
+* Express.js
+* JWT
+* Mongoose
+
+### Database
+
+* MongoDB Atlas
+
+### Deployment
+
+* Render
+* Vercel
+
+---
+
+## 📂 Project Structure
+
+Backend
+
+```text
+src/
+├── controller/
+├── middleware/
+├── models/
+├── routes/
+├── services/
+└── config/
+```
+
+Frontend
+
+```text
+src/
+├── components/
+├── pages/
+├── services/
+└── assets/
+```
+
+---
+
+## ⚙️ Installation
+
+### Backend
+
+```bash
+git clone <backend-repo-url>
+cd BTS
+
+npm install
+npm start
+```
+
+### Frontend
+
+```bash
+git clone <frontend-repo-url>
+cd BTS-frontend
+
+npm install
+npm run dev
+```
+
+---
+
+## Environment Variables
+
+Backend `.env`
+
+```env
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+EMAIL_USER=your_email
+EMAIL_PASS=your_password
+```
+
+Frontend `.env`
+
+```env
+VITE_API_URL=https://your-backend-url.onrender.com
+```
+
+---
+
+## API Endpoints
+
+### Authentication
+
+```http
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+```
+
+### Accounts
+
+```http
+POST /api/accounts
+GET /api/accounts
+GET /api/accounts/balance/:accountId
+```
+
+### Transactions
+
+```http
+POST /api/transactions
+POST /api/transactions/system/initial-funds
+```
+
+---
+
+## Author
+
+**Nishanta Kumar Bhuyan**
+
+Electronics & Communication Engineering, NIT Silchar
+
+Focused on Full-Stack Development, DSA, and Product-Based Company Placements.
