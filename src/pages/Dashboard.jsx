@@ -1,0 +1,148 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import AccountCard from "../components/AccountCard";
+import Navbar from "../components/Navbar";
+
+function Dashboard() {
+  const [accounts, setAccounts] = useState([]);
+  const [balances, setBalances] = useState({});
+  const logout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
+  const createAccount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/accounts`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      console.log(res.data);
+      alert("Account Created");
+
+      fetchAccounts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetchAccounts();
+  }, []);
+  const fetchBalance = async (accountId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/accounts/balance/${accountId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setBalances((prev) => ({
+        ...prev,
+        [accountId]: res.data.balance,
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const fetchAccounts = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/accounts`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      console.log(res.data);
+
+      const accountsData = Array.isArray(res.data)
+        ? res.data
+        : res.data.accounts || [];
+
+      setAccounts(accountsData);
+
+      accountsData.forEach((account) => {
+        fetchBalance(account._id);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const totalBalance = Object.values(balances).reduce(
+    (sum, bal) => sum + bal,
+    0,
+  );
+  return (
+    <div
+      style={{
+        maxWidth: "1000px",
+        margin: "0 auto",
+        padding: "20px",
+      }}
+    >
+      <Navbar />
+      <h1>Bank Dashboard</h1>
+      <div
+        style={{
+          background: "#1e293b",
+          padding: "20px",
+          borderRadius: "12px",
+          marginBottom: "20px",
+        }}
+      >
+        <h3>Total Balance</h3>
+        <h1 style={{ margin: 0 }}>₹{totalBalance.toLocaleString()}</h1>
+      </div>
+      <button
+        style={{
+          padding: "10px 20px",
+          marginRight: "10px",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
+        onClick={logout}
+      >
+        Logout
+      </button>
+      <button
+        style={{
+          padding: "10px 20px",
+          marginRight: "10px",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
+        onClick={createAccount}
+      >
+        Create Account
+      </button>
+      <h3>Total Accounts: {accounts.length}</h3>
+      <h2>Your Accounts</h2>
+
+      {accounts.map((account) => (
+        <AccountCard
+          key={account._id}
+          account={account}
+          balance={balances[account._id] ?? 0}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default Dashboard;
