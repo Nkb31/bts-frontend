@@ -105,7 +105,7 @@ function Dashboard() {
     <div className="min-h-screen dashboard-shell">
       <Navbar />
       <div className="container-responsive py-6 sm:py-8 lg:py-10">
-        <div className="mb-8 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+        <div id="overview" className="mb-8 flex scroll-mt-24 flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div><p className="section-eyebrow mb-2">Personal banking</p><h1 className="font-geist font-medium text-3xl sm:text-4xl lg:text-5xl tracking-tight text-ink">Good to see you</h1><p className="font-geist text-body-md text-body mt-2">Manage your accounts and keep your money moving.</p></div>
           <div className="hidden sm:flex items-center gap-2 text-body-sm text-mute"><span className="w-2 h-2 rounded-full bg-cyan" />Secure session active</div>
         </div>
@@ -128,7 +128,7 @@ function Dashboard() {
           <button onClick={createAccount} disabled={creating || loading} className="btn-primary flex-1 sm:flex-none disabled:opacity-50 disabled:cursor-not-allowed">{creating ? "Creating Account..." : "Create Account"}</button>
           <button onClick={logout} className="btn-ghost-sm flex-1 sm:flex-none">Logout</button>
         </div></div>
-        <div>
+        <div id="accounts" className="scroll-mt-24">
           <div className="flex items-end justify-between mb-4"><div><p className="section-eyebrow mb-2">Portfolio</p><h2 className="font-geist font-medium text-heading-lg text-ink">Your accounts</h2></div><span className="text-body-sm text-mute">{accounts.length} {accounts.length === 1 ? "account" : "accounts"}</span></div>
           {loading ? <div className="feature-card text-center py-12"><div className="inline-block w-8 h-8 border-2 border-ink border-t-transparent rounded-full animate-spin mb-4" /><p className="font-geist text-body-md text-mute">Loading your accounts...</p></div> : accounts.length === 0 ? (
             <div className="feature-card text-center py-12">
@@ -138,7 +138,7 @@ function Dashboard() {
             </div>
           ) : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">{accounts.map((account) => <AccountCard key={account._id} account={account} balance={balances[account._id] ?? 0} />)}</div>}
         </div>
-        {!loading && accounts.length > 0 && <div className="mt-8 space-y-8"><TransferPanel accounts={accounts} token={token} onComplete={() => window.location.reload()} /><TransactionHistory transactions={transactions} accounts={accounts} /></div>}
+        {!loading && accounts.length > 0 && <div id="activity" className="mt-8 scroll-mt-24 space-y-8"><TransferPanel accounts={accounts} token={token} onComplete={() => window.location.reload()} /><TransactionHistory transactions={transactions} accounts={accounts} /></div>}
       </div>
     </div>
   );
