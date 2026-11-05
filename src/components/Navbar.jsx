@@ -16,7 +16,7 @@ function Navbar() {
   ];
 
   return (
-    <nav className="bg-canvas border-b border-hairline sticky top-0 z-50 backdrop-blur-sm bg-canvas/95">
+    <nav className="bg-canvas border-b border-hairline sticky top-0 z-50 backdrop-blur-sm">
       <div className="container-responsive flex items-center justify-between h-14 sm:h-16">
         <h2 className="font-geist font-medium text-lg sm:text-xl tracking-tight text-ink">
           Bank Transaction System

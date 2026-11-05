@@ -43,7 +43,7 @@ function ErrorPage({ status = 404 }) {
       <div className="fixed top-4 right-4 z-10">
         <ThemeToggle />
       </div>
-      <div className="w-full max-w-[42rem]">
+      <div className="w-full max-w-168">
         <section className="error-card bg-canvas-elevated border border-hairline rounded-lg p-6 sm:p-10 lg:p-12 text-center">
           <div className="error-mark inline-flex items-center justify-center w-16 h-16 rounded-full bg-ink text-on-primary mb-6" aria-hidden="true">
             <span className="font-geist-mono text-lg">!</span>
@@ -55,7 +55,7 @@ function ErrorPage({ status = 404 }) {
           <h1 className="font-geist font-medium text-2xl sm:text-4xl tracking-tight text-ink mt-5">
             {content.title}
           </h1>
-          <p className="font-geist text-body-md text-body mt-3 max-w-[34rem] mx-auto">
+          <p className="font-geist text-body-md text-body mt-3 max-w-136 mx-auto">
             {content.description}
           </p>
           <p className="font-geist-mono text-body-sm text-mute mt-5 break-all">
