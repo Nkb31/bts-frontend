@@ -11,7 +11,7 @@ export default function Register() {
     if (password !== confirmPassword) { setError("Passwords do not match"); return; }
     if (password.length < 6) { setError("Password must be at least 6 characters"); return; }
     setLoading(true);
-    try { await api.post("/api/auth/register", { username: name, email, password }); navigate("/?verification=sent"); }
+    try { const res = await api.post("/api/auth/register", { username: name, email, password }); localStorage.setItem("token", res.data.token); navigate("/dashboard"); }
     catch (err) { setError(err.response?.data?.message || "Registration failed. Please try again."); }
     finally { setLoading(false); }
   };

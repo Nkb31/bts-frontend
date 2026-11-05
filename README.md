@@ -7,10 +7,7 @@ A full-stack MERN Banking Transaction System that allows users to register, log 
 ### Authentication
 
 * User Registration
-* Email ownership verification before login
 * User Login
-* Email OTP for login verification
-* OTP-based password reset
 * JWT Authentication
 * Protected Routes
 * Logout Functionality
@@ -35,7 +32,6 @@ A full-stack MERN Banking Transaction System that allows users to register, log 
 * Token Blacklisting
 * Protected APIs
 * Idempotency Key Support
-* Email notifications for completed transfers
 
 ### Deployment
 
@@ -129,11 +125,13 @@ Backend `.env`
 ```env
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
+EMAIL_ENABLED=false
 EMAIL_USER=your_email
 # Option A: Gmail App Password (simplest)
 EMAIL_PASS=your_16_character_app_password
 
 # Option B: Gmail OAuth2 (use instead of EMAIL_PASS)
+# Optional email service settings (set EMAIL_ENABLED=true to enable)
 CLIENT_ID=your_google_oauth_client_id
 CLIENT_SECRET=your_google_oauth_client_secret
 REFRESH_TOKEN=your_google_oauth_refresh_token
@@ -158,8 +156,6 @@ POST /api/auth/login
 POST /api/auth/login/verify-otp
 POST /api/auth/password-reset/request
 POST /api/auth/password-reset/confirm
-GET /api/auth/verify-email?token=...
-POST /api/auth/resend-verification
 POST /api/auth/logout
 ```
 
