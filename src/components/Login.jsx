@@ -22,7 +22,7 @@ export default function Login() {
     finally { setLoading(false); }
   };
   return (
-    <div className="relative min-h-screen auth-shell flex items-center justify-center p-4 sm:p-6 lg:p-8"><div className="fixed top-4 right-4 z-10"><ThemeToggle /></div><div className="w-full max-w-[28rem]"><div className="auth-card bg-canvas-elevated border border-hairline rounded-lg p-6 sm:p-8">
+    <div className="relative min-h-screen auth-shell flex items-center justify-center p-4 sm:p-6 lg:p-8"><div className="fixed top-4 right-4 z-10"><ThemeToggle /></div><div className="w-full max-w-112"><div className="auth-card bg-canvas-elevated border border-hairline rounded-lg p-6 sm:p-8">
       <div className="text-center mb-8"><div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-ink text-on-primary mb-4"><FaBuilding className="text-xl" /></div><h1 className="font-geist font-medium text-3xl sm:text-4xl tracking-tight text-ink">Bank Transaction System</h1><p className="font-geist text-body-md text-body mt-2">Sign in to your account</p></div>
       {error && <div role="alert" className="bg-error-deep/10 border border-error text-error rounded-sm px-4 py-3 mb-6 font-geist text-body-sm">{error}</div>}
       {notice && <div role="status" className="bg-cyan-soft border border-cyan text-ink rounded-sm px-4 py-3 mb-6 font-geist text-body-sm">{notice}</div>}
