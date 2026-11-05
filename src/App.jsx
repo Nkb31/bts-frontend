@@ -3,6 +3,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -10,6 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/401" element={<ErrorPage status={401} />} />
         <Route path="/403" element={<ErrorPage status={403} />} />
