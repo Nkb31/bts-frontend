@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bank Transaction System">
+  <rect width="64" height="64" rx="16" fill="#0f172a"/>
+  <path d="M12 27 32 14l20 13H12Z" fill="#38bdf8"/>
+  <path d="M17 30h30v5H17zM20 38h6v12h-6zM29 38h6v12h-6zM38 38h6v12h-6zM14 52h36v4H14z" fill="#f8fafc"/>
+</svg>
