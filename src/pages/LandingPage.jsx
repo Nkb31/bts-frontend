@@ -67,31 +67,31 @@ export default function LandingPage() {
               <div className="rounded-[22px] bg-[#0b1320] p-5 text-white shadow-inner shadow-black/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-geist-mono text-[10px] uppercase tracking-[0.22em] text-white/70">Example portfolio</p>
-                    <h2 className="mt-2 font-geist text-3xl font-medium tracking-tight">₹18,420.00</h2>
+                    <p className="font-geist-mono text-[10px] uppercase tracking-[0.22em] text-white/70">Account overview</p>
+                    <h2 className="mt-2 font-geist text-3xl font-medium tracking-tight">Your balances</h2>
                   </div>
                   <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-geist text-body-sm text-white/80">
-                    +12.4%
+                    Private
                   </div>
                 </div>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <div className="font-geist text-body-sm text-white/75">Available cash</div>
-                    <div className="mt-2 font-geist text-2xl font-medium">₹9,548</div>
+                    <div className="mt-2 font-geist text-lg font-medium">Across your accounts</div>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <div className="font-geist text-body-sm text-white/75">Outgoing</div>
-                    <div className="mt-2 font-geist text-2xl font-medium text-amber-300">₹2,940</div>
+                    <div className="mt-2 font-geist text-lg font-medium">Recent transfers</div>
                   </div>
                 </div>
 
                 <div className="mt-6 space-y-3">
-                  {["Main account", "Savings account", "Travel wallet"].map((label, idx) => (
+                  {["Main account", "Savings account", "Travel wallet"].map((label) => (
                     <div key={label} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                       <div>
                         <div className="font-geist text-body-sm text-white/75">{label}</div>
-                        <div className="mt-1 font-geist text-lg font-medium">{["₹8,214", "₹6,300", "₹3,906"][idx]}</div>
+                        <div className="mt-1 font-geist text-body-sm font-medium tracking-[0.2em] text-white/80">••••••••</div>
                       </div>
                       <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" aria-hidden="true" />
                     </div>

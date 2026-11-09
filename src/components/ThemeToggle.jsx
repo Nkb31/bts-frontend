@@ -32,7 +32,7 @@ export default function ThemeToggle() {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={isDark}
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-hairline bg-canvas-elevated text-ink hover:bg-hairline-soft transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-hairline bg-canvas-elevated text-ink transition-colors hover:bg-hairline-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link"
     >
       {isDark ? <FaSun aria-hidden="true" /> : <FaMoon aria-hidden="true" />}
     </button>

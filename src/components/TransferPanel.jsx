@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaExchangeAlt } from "react-icons/fa";
 import api from "../services/api";
 
 function TransferPanel({ accounts, token, onComplete }) {
@@ -36,7 +37,7 @@ function TransferPanel({ accounts, token, onComplete }) {
 
   return (
     <section className="feature-card-elevated" aria-labelledby="transfer-heading">
-      <div className="flex items-start justify-between gap-4 mb-6"><div><p className="section-eyebrow mb-2">Move money</p><h2 id="transfer-heading" className="font-geist font-medium text-heading-lg text-ink">Send a transfer</h2><p className="font-geist text-body-sm text-body mt-1">Move funds securely between active accounts.</p></div><span className="hidden sm:inline-flex w-10 h-10 items-center justify-center rounded-full bg-link-soft text-link text-xl" aria-hidden="true">↗</span></div>
+      <div className="flex items-start justify-between gap-4 mb-6"><div><p className="section-eyebrow mb-2">Move money</p><h2 id="transfer-heading" className="font-geist font-medium text-heading-lg text-ink">Send a transfer</h2><p className="font-geist text-body-sm text-body mt-1">Move funds securely between active accounts.</p></div><span className="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-full bg-link-soft text-link text-xl" aria-hidden="true"><FaExchangeAlt /></span></div>
       {status.message && <div role={status.type === "error" ? "alert" : "status"} aria-live="polite" className={`rounded-sm px-4 py-3 mb-5 text-body-sm ${status.type === "error" ? "bg-error-deep/10 text-error-deep" : "bg-cyan-soft text-ink"}`}>{status.message}</div>}
       <form onSubmit={submitTransfer} className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <label className="font-geist text-label-sm text-ink">From account<select name="fromAccount" value={fromAccount} onChange={(event) => setFromAccount(event.target.value)} className="text-input w-full mt-2" required>{accounts.map((account) => <option key={account._id} value={account._id}>{account._id.slice(-8)} · {account.currency}</option>)}</select></label>

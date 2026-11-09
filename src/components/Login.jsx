@@ -41,14 +41,14 @@ export default function Login() {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden auth-shell p-4 sm:p-6 lg:p-8">
       <div className="fixed right-4 top-4 z-10 sm:right-6 sm:top-6"><ThemeToggle /></div>
-      <div className="grid w-full max-w-224 overflow-hidden rounded-lg border border-hairline bg-canvas-elevated shadow-[0_24px_80px_color-mix(in_srgb,var(--color-ink)_10%,transparent)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="grid w-full max-w-256 overflow-hidden rounded-lg border border-hairline bg-canvas-elevated shadow-[0_24px_80px_color-mix(in_srgb,var(--color-ink)_10%,transparent)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <aside className="relative hidden min-h-140 flex-col justify-between overflow-hidden bg-ink p-8 text-on-primary lg:flex lg:p-10">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-white/10" aria-hidden="true" />
           <div className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full border border-white/10" aria-hidden="true" />
-          <div className="relative">
+          <div className="relative w-full">
             <div className="mb-10 inline-flex h-12 w-12 items-center justify-center rounded-md border border-white/15 bg-white/10"><FaBuilding className="text-lg" /></div>
-            <p className="max-w-xs font-geist text-3xl font-medium leading-tight tracking-tight">Move money with clarity.</p>
-            <p className="mt-4 max-w-xs font-geist text-body-md leading-6 text-white/65">A focused workspace for keeping your accounts and transactions in sync.</p>
+            <h2 className="max-w-xs font-geist text-3xl font-medium leading-tight tracking-tight">Move money with clarity.</h2>
+            <p className="mt-4 max-w-xs font-geist text-body-md leading-6 text-white/75">A focused workspace for keeping your accounts and transactions in sync.</p>
           </div>
           <div className="relative border-t border-white/15 pt-5 font-geist text-body-sm text-white/55">Bank Transaction System</div>
         </aside>

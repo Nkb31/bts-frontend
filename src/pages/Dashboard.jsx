@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { FaUniversity } from "react-icons/fa";
 import AccountCard from "../components/AccountCard";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
@@ -34,32 +35,16 @@ function Dashboard() {
     return totals;
   }, {}), [accounts, balances]);
 
-  const totalBalance = useMemo(
-    () => Object.values(totalsByCurrency).reduce((sum, value) => sum + Number(value || 0), 0),
-    [totalsByCurrency],
-  );
-
-  const totalIncoming = useMemo(
-    () => transactions.reduce((sum, transaction) => {
-      const accountIds = new Set(accounts.map((account) => account._id));
-      if (accountIds.has(transaction.toAccount)) {
-        return sum + Number(transaction.amount || 0);
-      }
-      return sum;
-    }, 0),
-    [transactions, accounts],
-  );
-
-  const totalOutgoing = useMemo(
-    () => transactions.reduce((sum, transaction) => {
-      const accountIds = new Set(accounts.map((account) => account._id));
-      if (accountIds.has(transaction.fromAccount)) {
-        return sum + Number(transaction.amount || 0);
-      }
-      return sum;
-    }, 0),
-    [transactions, accounts],
-  );
+  const { totalIncoming, totalOutgoing } = useMemo(() => {
+    const accountIds = new Set(accounts.map((account) => account._id));
+    return transactions.reduce((totals, transaction) => {
+      if (transaction.status !== "COMPLETED") return totals;
+      const amount = Number(transaction.amount) || 0;
+      if (accountIds.has(transaction.toAccount)) totals.totalIncoming += amount;
+      if (accountIds.has(transaction.fromAccount)) totals.totalOutgoing += amount;
+      return totals;
+    }, { totalIncoming: 0, totalOutgoing: 0 });
+  }, [transactions, accounts]);
 
   const netFlow = totalIncoming - totalOutgoing;
 
@@ -165,27 +150,21 @@ function Dashboard() {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/login", { replace: true });
-  };
-
   if (!token) return <Navigate to="/login" replace />;
 
   return (
     <div className="min-h-screen dashboard-shell">
       <Navbar />
       <main id="main-content" tabIndex={-1} className="container-responsive py-6 sm:py-8 lg:py-12">
-        <header id="overview" className="mb-8 flex scroll-mt-24 flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <header id="overview" className="mb-8 flex scroll-mt-24 flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="section-eyebrow mb-2">Personal banking</p>
             <h1 className="font-geist font-medium text-3xl sm:text-4xl lg:text-5xl tracking-tight text-ink">Good to see you</h1>
             <p className="mt-2 font-geist text-body-md text-body">Manage your accounts and keep your money moving.</p>
           </div>
-          <div className="premium-badge hidden sm:inline-flex">
-            <span className="h-2 w-2 rounded-full bg-cyan" aria-hidden="true" />
-            Secure session active
-          </div>
+          <button onClick={createAccount} disabled={creating || loading} className="btn-primary w-full sm:w-auto disabled:cursor-not-allowed disabled:opacity-50">
+            {creating ? "Creating account..." : "Create account"}
+          </button>
         </header>
 
         <section className="hero-card relative overflow-hidden rounded-2xl p-6 sm:p-8 lg:p-10">
@@ -205,63 +184,50 @@ function Dashboard() {
               )}
               <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-geist text-body-sm text-white/80">
                 <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
-                Updated just now
+                Across your accounts
               </div>
             </div>
 
             <div className="space-y-3">
               <div className="mini-panel">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="font-geist text-body-sm text-white/80">Active accounts</span>
-                  <span className="font-geist text-2xl font-medium text-white">{accounts.length}</span>
+                  <span className="font-geist text-body-sm text-white/80">Accounts</span>
+                  <span className="font-geist text-2xl font-medium text-white">{loading ? "—" : accounts.length}</span>
                 </div>
               </div>
               <div className="mini-panel">
                 <div className="flex items-center justify-between gap-3">
                   <span className="font-geist text-body-sm text-white/80">Net flow</span>
                   <span className={`font-geist text-xl font-medium ${netFlow >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
-                    {formatCurrency(Math.abs(netFlow), "INR")}
+                    {netFlow >= 0 ? "+" : "−"}{formatCurrency(Math.abs(netFlow), "INR")}
                   </span>
                 </div>
-                <p className="mt-2 font-geist text-body-sm text-white/70">{netFlow >= 0 ? "Incoming exceeds outgoing" : "Spending is ahead of incoming"}</p>
+                <p className="mt-2 font-geist text-body-sm text-white/70">{loading ? "Loading recent activity" : "Completed transfers in latest activity"}</p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <section aria-label="Recent transfer summary" className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <div className="stat-card">
-            <p className="label">Available cash</p>
-            <p className="value">{formatCurrency(totalBalance, "INR")}</p>
-            <div className="trend"><span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />Across all accounts</div>
+            <p className="label">Incoming · completed transfers</p>
+            <p className="value">{loading ? "—" : formatCurrency(totalIncoming, "INR")}</p>
+            <div className="trend"><span className="h-2 w-2 rounded-full bg-cyan-500" aria-hidden="true" />Latest 50 records</div>
           </div>
           <div className="stat-card">
-            <p className="label">Incoming</p>
-            <p className="value">{formatCurrency(totalIncoming, "INR")}</p>
-            <div className="trend"><span className="h-2 w-2 rounded-full bg-cyan-500" aria-hidden="true" />Last activity</div>
+            <p className="label">Outgoing · completed transfers</p>
+            <p className="value">{loading ? "—" : formatCurrency(totalOutgoing, "INR")}</p>
+            <div className="trend"><span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />Latest 50 records</div>
           </div>
           <div className="stat-card">
-            <p className="label">Outgoing</p>
-            <p className="value">{formatCurrency(totalOutgoing, "INR")}</p>
-            <div className="trend"><span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />This cycle</div>
-          </div>
-          <div className="stat-card">
-            <p className="label">Account health</p>
-            <p className="value">{accounts.length > 0 ? "Stable" : "Open"}</p>
-            <div className="trend"><span className="h-2 w-2 rounded-full bg-violet-500" aria-hidden="true" />{accounts.length} accounts live</div>
+            <p className="label">Recent transfers</p>
+            <p className="value">{loading ? "—" : transactions.length}</p>
+            <div className="trend"><span className="h-2 w-2 rounded-full bg-link" aria-hidden="true" />Most recent records</div>
           </div>
         </section>
 
         {error && <div role="alert" className="mt-6 bg-error-deep/10 border border-error text-error rounded-sm px-4 py-3 font-geist text-body-sm">{error}</div>}
         {notice && <div role="status" className="mt-6 bg-cyan-soft border border-cyan text-ink rounded-sm px-4 py-3 font-geist text-body-sm">{notice}</div>}
-
-        <div className="mb-10 mt-8">
-          <p className="section-eyebrow mb-3">Quick actions</p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button onClick={createAccount} disabled={creating || loading} className="btn-primary flex-1 sm:flex-none disabled:opacity-50 disabled:cursor-not-allowed">{creating ? "Creating Account..." : "Create Account"}</button>
-            <button onClick={logout} className="btn-ghost-sm flex-1 sm:flex-none">Logout</button>
-          </div>
-        </div>
 
         {accounts.length > 0 && (
           <div className="mb-8 feature-card rounded-2xl p-5 sm:p-6">
@@ -308,7 +274,7 @@ function Dashboard() {
           ) : accounts.length === 0 ? (
             <div className="feature-card text-center py-12">
               <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-hairline-soft text-mute" aria-hidden="true">
-                <span className="text-2xl">🏦</span>
+                <FaUniversity className="text-2xl" />
               </div>
               <p className="mb-4 font-geist text-body-md text-mute">No accounts yet</p>
               <p className="mb-6 font-geist text-body-sm text-mute">Create your first bank account to get started</p>

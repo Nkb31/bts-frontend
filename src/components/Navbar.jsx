@@ -47,7 +47,7 @@ function Navbar() {
           <button type="button" onClick={logout} className="btn-ghost-sm inline-flex items-center gap-2"><FaSignOutAlt aria-hidden="true" />Logout</button>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden"><ThemeToggle /><button type="button" className="rounded-md p-2 text-ink transition-colors hover:bg-hairline-soft" onClick={() => setIsMobileMenuOpen((open) => !open)} aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={isMobileMenuOpen}>{isMobileMenuOpen ? <FaTimes /> : <FaBars />}</button></div>
+        <div className="flex items-center gap-2 md:hidden"><ThemeToggle /><button type="button" className="inline-flex h-11 w-11 items-center justify-center rounded-md text-ink transition-colors hover:bg-hairline-soft" onClick={() => setIsMobileMenuOpen((open) => !open)} aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={isMobileMenuOpen}>{isMobileMenuOpen ? <FaTimes /> : <FaBars />}</button></div>
       </div>
 
       {isMobileMenuOpen && <div className="border-t border-hairline bg-canvas md:hidden"><nav className="container-responsive space-y-1 py-3" aria-label="Mobile navigation">

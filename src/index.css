@@ -19,8 +19,7 @@
     min-width: 320px;
     margin: 0;
     background:
-      radial-gradient(circle at top left, color-mix(in srgb, var(--color-link) 8%, transparent), transparent 28rem),
-      radial-gradient(circle at bottom right, color-mix(in srgb, var(--color-violet) 8%, transparent), transparent 30rem),
+      radial-gradient(circle at top left, color-mix(in srgb, var(--color-link) 6%, transparent), transparent 30rem),
       var(--color-canvas);
     color: var(--color-ink);
     text-rendering: optimizeLegibility;
@@ -58,6 +57,15 @@
     touch-action: manipulation;
   }
 
+  :where(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid var(--color-link);
+    outline-offset: 3px;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
   ::selection {
     background: color-mix(in srgb, var(--color-link) 25%, transparent);
   }
@@ -67,8 +75,8 @@
   --color-ink: #f5f7fa;
   --color-on-primary: #0b0f14;
   --color-body: #d7dee7;
-  --color-mute: #9aa6b2;
-  --color-faint: #7f8b99;
+  --color-mute: #a6b0bd;
+  --color-faint: #8c98a8;
   --color-hairline: #2a3542;
   --color-hairline-soft: #1b2530;
   --color-canvas: #0b0f14;
@@ -89,14 +97,12 @@
   .landing-shell {
     background:
       radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 28rem),
-      radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.12), transparent 24rem),
       var(--color-canvas);
   }
 
   .auth-shell {
     background:
-      radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--color-link) 12%, transparent), transparent 28rem),
-      radial-gradient(circle at 85% 85%, color-mix(in srgb, var(--color-violet) 10%, transparent), transparent 30rem),
+      radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--color-link) 10%, transparent), transparent 30rem),
       var(--color-canvas);
   }
 
@@ -106,13 +112,12 @@
 
   .dashboard-shell {
     background:
-      radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--color-link) 10%, transparent), transparent 26rem),
-      radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--color-violet) 8%, transparent), transparent 24rem),
+      radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--color-link) 7%, transparent), transparent 30rem),
       var(--color-canvas);
   }
 
   .hero-card {
-    background: linear-gradient(135deg, #0b1020 0%, #111827 25%, #111827 50%, #0f172a 100%);
+    background: linear-gradient(135deg, #10243a 0%, #14283b 52%, #0f1d2c 100%);
     color: var(--color-on-primary);
     box-shadow: 0 22px 56px color-mix(in srgb, var(--color-ink) 18%, transparent);
   }
@@ -163,8 +168,6 @@
   }
 
   .account-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px color-mix(in srgb, var(--color-ink) 10%, transparent);
     border-color: color-mix(in srgb, var(--color-link) 45%, var(--color-hairline));
   }
 
@@ -178,8 +181,8 @@
   --color-ink: #171717;
   --color-on-primary: #ffffff;
   --color-body: #4d4d4d;
-  --color-mute: #8f8f8f;
-  --color-faint: #a1a1a1;
+  --color-mute: #6b7280;
+  --color-faint: #737373;
   --color-hairline: #ebebeb;
   --color-hairline-soft: #f2f2f2;
   --color-canvas: #fafafa;
@@ -194,8 +197,8 @@
   --color-warning-deep: #ab570a;
   --color-violet: #7928ca;
   --color-violet-soft: #d8ccf1;
-  --color-cyan: #50e3c2;
-  --color-cyan-soft: #aaffec;
+  --color-cyan: #087a5b;
+  --color-cyan-soft: #d7f0e8;
   --color-pink: #ff0080;
   --color-magenta: #eb367f;
 
@@ -254,6 +257,7 @@
   /* Buttons */
   .btn-primary {
     @apply bg-ink text-on-primary font-geist font-medium text-button-lg rounded-pill px-4 py-2.5;
+    min-height: 44px;
     transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
     box-shadow: 0 8px 18px color-mix(in srgb, var(--color-ink) 16%, transparent);
   }
@@ -265,14 +269,17 @@
 
   .btn-secondary {
     @apply bg-canvas-elevated text-ink font-geist font-medium text-button-lg rounded-pill px-3.5 py-2;
+    min-height: 44px;
   }
 
   .btn-primary-sm {
     @apply bg-ink text-on-primary font-geist font-medium text-button-md rounded-sm px-1.5 py-1;
+    min-height: 44px;
   }
 
   .btn-ghost-sm {
     @apply bg-canvas-elevated text-ink border border-hairline font-geist font-medium text-button-md rounded-sm px-3 py-2;
+    min-height: 44px;
     transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
   }
 
@@ -283,7 +290,6 @@
   }
 
   .text-input:focus {
-    outline: none;
     border-color: var(--color-link);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-link) 18%, transparent);
   }
@@ -371,7 +377,6 @@
     transition-duration: 0.01ms !important;
   }
 
-  .account-card:hover,
   .btn-primary:hover:not(:disabled) {
     transform: none;
   }

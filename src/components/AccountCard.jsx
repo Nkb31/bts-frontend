@@ -1,3 +1,5 @@
+import { FaUniversity } from "react-icons/fa";
+
 function AccountCard({ account, balance }) {
   const formatCurrency = (amount, currency) => {
     const numericAmount = Number(amount) || 0;
@@ -16,7 +18,7 @@ function AccountCard({ account, balance }) {
       <div className="mb-4 flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-link-soft text-lg text-link" aria-hidden="true">↗</span>
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-link-soft text-link" aria-hidden="true"><FaUniversity /></span>
             <h3 className="font-geist text-base font-medium text-ink sm:text-heading-md">Bank Account</h3>
           </div>
           <p className="mt-1 font-geist text-body-sm text-mute">Account #{account._id?.slice(-8) || "N/A"}</p>
