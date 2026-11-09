@@ -20,6 +20,9 @@ function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [funding, setFunding] = useState(false);
+  const [depositAccountId, setDepositAccountId] = useState("");
+  const [depositAmount, setDepositAmount] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const navigate = useNavigate();
@@ -74,6 +77,9 @@ function Dashboard() {
         const accountsData = Array.isArray(res.data) ? res.data : res.data?.accounts || [];
         if (cancelled) return;
         setAccounts(accountsData);
+        if (accountsData.length > 0 && !depositAccountId) {
+          setDepositAccountId(accountsData[0]._id);
+        }
         const balanceEntries = await Promise.all(accountsData.map(async (account) => {
           try {
             const balanceRes = await api.get(`/api/accounts/balance/${account._id}`, { headers: { Authorization: `Bearer ${token}` } });
@@ -103,7 +109,7 @@ function Dashboard() {
     };
     loadAccounts();
     return () => { cancelled = true; };
-  }, [navigate, token]);
+  }, [navigate, token, depositAccountId]);
 
   const createAccount = async () => {
     setCreating(true);
@@ -120,6 +126,42 @@ function Dashboard() {
       } else setError("Unable to create the account. Please try again.");
     } finally {
       setCreating(false);
+    }
+  };
+
+  const addFunds = async (event) => {
+    event.preventDefault();
+    if (!depositAccountId || Number(depositAmount) <= 0) {
+      setError("Choose an account and enter a valid amount to add funds.");
+      return;
+    }
+
+    setFunding(true);
+    setError("");
+    setNotice("");
+
+    try {
+      await api.post(
+        "/api/transactions/deposit",
+        {
+          accountId: depositAccountId,
+          amount: Number(depositAmount),
+          idempotencyKey: crypto.randomUUID(),
+        },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      setNotice("Funds added successfully.");
+      setDepositAmount("");
+      setTimeout(() => window.location.reload(), 500);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login", { replace: true });
+      } else {
+        setError(err.response?.data?.message || "Unable to add funds. Please try again.");
+      }
+    } finally {
+      setFunding(false);
     }
   };
 
@@ -220,6 +262,35 @@ function Dashboard() {
             <button onClick={logout} className="btn-ghost-sm flex-1 sm:flex-none">Logout</button>
           </div>
         </div>
+
+        {accounts.length > 0 && (
+          <div className="mb-8 feature-card rounded-2xl p-5 sm:p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="section-eyebrow mb-2">Add funds</p>
+                <h2 className="font-geist font-medium text-heading-lg text-ink">Top up an account</h2>
+              </div>
+              <span className="font-geist text-body-sm text-mute">Demo funding</span>
+            </div>
+            <form onSubmit={addFunds} className="mt-5 grid gap-4 md:grid-cols-[1.2fr_0.8fr_auto] md:items-end">
+              <label className="font-geist text-label-sm text-ink">
+                Account
+                <select value={depositAccountId} onChange={(event) => setDepositAccountId(event.target.value)} className="text-input w-full mt-2" required>
+                  {accounts.map((account) => (
+                    <option key={account._id} value={account._id}>{account._id.slice(-8)} · {account.currency}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="font-geist text-label-sm text-ink">
+                Amount
+                <input type="number" min="0.01" step="0.01" inputMode="decimal" value={depositAmount} onChange={(event) => setDepositAmount(event.target.value)} className="text-input w-full mt-2" placeholder="0.00" required />
+              </label>
+              <button type="submit" disabled={funding} className="btn-primary w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
+                {funding ? "Adding..." : "Add funds"}
+              </button>
+            </form>
+          </div>
+        )}
 
         <div id="accounts" className="scroll-mt-24">
           <div className="mb-4 flex items-end justify-between">
