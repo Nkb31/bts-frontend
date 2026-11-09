@@ -41,7 +41,7 @@ export default function Login() {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden auth-shell p-4 sm:p-6 lg:p-8">
       <div className="fixed right-4 top-4 z-10 sm:right-6 sm:top-6"><ThemeToggle /></div>
-      <div className="grid w-full max-w-256 overflow-hidden rounded-lg border border-hairline bg-canvas-elevated shadow-[0_24px_80px_color-mix(in_srgb,var(--color-ink)_10%,transparent)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="grid w-full max-w-5xl overflow-hidden rounded-lg border border-hairline bg-canvas-elevated shadow-[0_24px_80px_color-mix(in_srgb,var(--color-ink)_10%,transparent)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <aside className="relative hidden min-h-140 flex-col justify-between overflow-hidden bg-ink p-8 text-on-primary lg:flex lg:p-10">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-white/10" aria-hidden="true" />
           <div className="absolute -bottom-32 -left-24 h-80 w-80 rounded-full border border-white/10" aria-hidden="true" />
