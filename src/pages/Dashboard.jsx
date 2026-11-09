@@ -31,9 +31,38 @@ function Dashboard() {
     return totals;
   }, {}), [accounts, balances]);
 
+  const totalBalance = useMemo(
+    () => Object.values(totalsByCurrency).reduce((sum, value) => sum + Number(value || 0), 0),
+    [totalsByCurrency],
+  );
+
+  const totalIncoming = useMemo(
+    () => transactions.reduce((sum, transaction) => {
+      const accountIds = new Set(accounts.map((account) => account._id));
+      if (accountIds.has(transaction.toAccount)) {
+        return sum + Number(transaction.amount || 0);
+      }
+      return sum;
+    }, 0),
+    [transactions, accounts],
+  );
+
+  const totalOutgoing = useMemo(
+    () => transactions.reduce((sum, transaction) => {
+      const accountIds = new Set(accounts.map((account) => account._id));
+      if (accountIds.has(transaction.fromAccount)) {
+        return sum + Number(transaction.amount || 0);
+      }
+      return sum;
+    }, 0),
+    [transactions, accounts],
+  );
+
+  const netFlow = totalIncoming - totalOutgoing;
+
   useEffect(() => {
     if (!token) {
-      navigate("/", { replace: true });
+      navigate("/login", { replace: true });
       return undefined;
     }
     let cancelled = false;
@@ -64,7 +93,7 @@ function Dashboard() {
         if (cancelled) return;
         if (err.response?.status === 401) {
           localStorage.removeItem("token");
-          navigate("/", { replace: true });
+          navigate("/login", { replace: true });
           return;
         }
         setError("Unable to load your accounts. Please try again.");
@@ -87,7 +116,7 @@ function Dashboard() {
     } catch (err) {
       if (err.response?.status === 401) {
         localStorage.removeItem("token");
-        navigate("/", { replace: true });
+        navigate("/login", { replace: true });
       } else setError("Unable to create the account. Please try again.");
     } finally {
       setCreating(false);
@@ -96,50 +125,140 @@ function Dashboard() {
 
   const logout = () => {
     localStorage.removeItem("token");
-    navigate("/", { replace: true });
+    navigate("/login", { replace: true });
   };
 
-  if (!token) return <Navigate to="/" replace />;
+  if (!token) return <Navigate to="/login" replace />;
 
   return (
     <div className="min-h-screen dashboard-shell">
       <Navbar />
-      <div className="container-responsive py-6 sm:py-8 lg:py-10">
-        <div id="overview" className="mb-8 flex scroll-mt-24 flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div><p className="section-eyebrow mb-2">Personal banking</p><h1 className="font-geist font-medium text-3xl sm:text-4xl lg:text-5xl tracking-tight text-ink">Good to see you</h1><p className="font-geist text-body-md text-body mt-2">Manage your accounts and keep your money moving.</p></div>
-          <div className="hidden sm:flex items-center gap-2 text-body-sm text-mute"><span className="w-2 h-2 rounded-full bg-cyan" />Secure session active</div>
-        </div>
-        <div className="hero-card rounded-lg p-6 sm:p-8 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <main id="main-content" tabIndex={-1} className="container-responsive py-6 sm:py-8 lg:py-12">
+        <header id="overview" className="mb-8 flex scroll-mt-24 flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="section-eyebrow mb-2">Personal banking</p>
+            <h1 className="font-geist font-medium text-3xl sm:text-4xl lg:text-5xl tracking-tight text-ink">Good to see you</h1>
+            <p className="mt-2 font-geist text-body-md text-body">Manage your accounts and keep your money moving.</p>
+          </div>
+          <div className="premium-badge hidden sm:inline-flex">
+            <span className="h-2 w-2 rounded-full bg-cyan" aria-hidden="true" />
+            Secure session active
+          </div>
+        </header>
+
+        <section className="hero-card relative overflow-hidden rounded-2xl p-6 sm:p-8 lg:p-10">
+          <div className="relative grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <p className="font-geist text-body-sm mb-2 opacity-75">Total balance</p>
-              <div className="space-y-1">
-                {Object.entries(totalsByCurrency).length > 0 ? Object.entries(totalsByCurrency).map(([currency, total]) => (
-                  <p key={currency} className="font-geist font-medium text-3xl sm:text-4xl tracking-tight text-on-primary">{formatCurrency(total, currency)}</p>
-                )) : <p className="font-geist font-medium text-3xl sm:text-4xl tracking-tight text-on-primary">—</p>}
+              <p className="font-geist text-body-sm text-white/70">Total balance</p>
+              {Object.entries(totalsByCurrency).length > 0 ? (
+                <div className="mt-3 space-y-2">
+                  {Object.entries(totalsByCurrency).map(([currency, total]) => (
+                    <p key={currency} className="font-geist text-3xl font-medium tracking-tight text-white sm:text-4xl lg:text-5xl">
+                      {formatCurrency(total, currency)}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 font-geist text-3xl font-medium tracking-tight text-white sm:text-4xl lg:text-5xl">—</p>
+              )}
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-geist text-body-sm text-white/80">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+                Updated just now
               </div>
             </div>
-            <div className="text-left sm:text-right"><p className="font-geist text-body-sm opacity-75">Active accounts</p><p className="font-geist font-medium text-3xl text-on-primary">{accounts.length}</p><p className="font-geist text-body-sm opacity-60 mt-1">Ready to use</p></div>
+
+            <div className="space-y-3">
+              <div className="mini-panel">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-geist text-body-sm text-white/80">Active accounts</span>
+                  <span className="font-geist text-2xl font-medium text-white">{accounts.length}</span>
+                </div>
+              </div>
+              <div className="mini-panel">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-geist text-body-sm text-white/80">Net flow</span>
+                  <span className={`font-geist text-xl font-medium ${netFlow >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                    {formatCurrency(Math.abs(netFlow), "INR")}
+                  </span>
+                </div>
+                <p className="mt-2 font-geist text-body-sm text-white/70">{netFlow >= 0 ? "Incoming exceeds outgoing" : "Spending is ahead of incoming"}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="stat-card">
+            <p className="label">Available cash</p>
+            <p className="value">{formatCurrency(totalBalance, "INR")}</p>
+            <div className="trend"><span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />Across all accounts</div>
+          </div>
+          <div className="stat-card">
+            <p className="label">Incoming</p>
+            <p className="value">{formatCurrency(totalIncoming, "INR")}</p>
+            <div className="trend"><span className="h-2 w-2 rounded-full bg-cyan-500" aria-hidden="true" />Last activity</div>
+          </div>
+          <div className="stat-card">
+            <p className="label">Outgoing</p>
+            <p className="value">{formatCurrency(totalOutgoing, "INR")}</p>
+            <div className="trend"><span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />This cycle</div>
+          </div>
+          <div className="stat-card">
+            <p className="label">Account health</p>
+            <p className="value">{accounts.length > 0 ? "Stable" : "Open"}</p>
+            <div className="trend"><span className="h-2 w-2 rounded-full bg-violet-500" aria-hidden="true" />{accounts.length} accounts live</div>
+          </div>
+        </section>
+
+        {error && <div role="alert" className="mt-6 bg-error-deep/10 border border-error text-error rounded-sm px-4 py-3 font-geist text-body-sm">{error}</div>}
+        {notice && <div role="status" className="mt-6 bg-cyan-soft border border-cyan text-ink rounded-sm px-4 py-3 font-geist text-body-sm">{notice}</div>}
+
+        <div className="mb-10 mt-8">
+          <p className="section-eyebrow mb-3">Quick actions</p>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button onClick={createAccount} disabled={creating || loading} className="btn-primary flex-1 sm:flex-none disabled:opacity-50 disabled:cursor-not-allowed">{creating ? "Creating Account..." : "Create Account"}</button>
+            <button onClick={logout} className="btn-ghost-sm flex-1 sm:flex-none">Logout</button>
           </div>
         </div>
-        {error && <div role="alert" className="bg-error-deep/10 border border-error text-error rounded-sm px-4 py-3 mb-6 font-geist text-body-sm">{error}</div>}
-        {notice && <div role="status" className="bg-cyan-soft border border-cyan text-ink rounded-sm px-4 py-3 mb-6 font-geist text-body-sm">{notice}</div>}
-        <div className="mb-10"><p className="section-eyebrow mb-3">Quick actions</p><div className="flex flex-col sm:flex-row gap-3">
-          <button onClick={createAccount} disabled={creating || loading} className="btn-primary flex-1 sm:flex-none disabled:opacity-50 disabled:cursor-not-allowed">{creating ? "Creating Account..." : "Create Account"}</button>
-          <button onClick={logout} className="btn-ghost-sm flex-1 sm:flex-none">Logout</button>
-        </div></div>
+
         <div id="accounts" className="scroll-mt-24">
-          <div className="flex items-end justify-between mb-4"><div><p className="section-eyebrow mb-2">Portfolio</p><h2 className="font-geist font-medium text-heading-lg text-ink">Your accounts</h2></div><span className="text-body-sm text-mute">{accounts.length} {accounts.length === 1 ? "account" : "accounts"}</span></div>
-          {loading ? <div className="feature-card text-center py-12"><div className="inline-block w-8 h-8 border-2 border-ink border-t-transparent rounded-full animate-spin mb-4" /><p className="font-geist text-body-md text-mute">Loading your accounts...</p></div> : accounts.length === 0 ? (
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <p className="section-eyebrow mb-2">Portfolio</p>
+              <h2 className="font-geist font-medium text-heading-lg text-ink">Your accounts</h2>
+            </div>
+            <span className="text-body-sm text-mute">{accounts.length} {accounts.length === 1 ? "account" : "accounts"}</span>
+          </div>
+          {loading ? (
             <div className="feature-card text-center py-12">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-hairline-soft text-mute mb-4" aria-hidden="true"><span className="text-2xl">🏦</span></div>
-              <p className="font-geist text-body-md text-mute mb-4">No accounts yet</p><p className="font-geist text-body-sm text-mute mb-6">Create your first bank account to get started</p>
+              <div className="mb-4 inline-block h-8 w-8 motion-safe:animate-spin rounded-full border-2 border-ink border-t-transparent" />
+              <p className="font-geist text-body-md text-mute">Loading your accounts...</p>
+            </div>
+          ) : accounts.length === 0 ? (
+            <div className="feature-card text-center py-12">
+              <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-hairline-soft text-mute" aria-hidden="true">
+                <span className="text-2xl">🏦</span>
+              </div>
+              <p className="mb-4 font-geist text-body-md text-mute">No accounts yet</p>
+              <p className="mb-6 font-geist text-body-sm text-mute">Create your first bank account to get started</p>
               <button onClick={createAccount} disabled={creating} className="btn-primary-sm disabled:opacity-50">{creating ? "Creating..." : "Create Your First Account"}</button>
             </div>
-          ) : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">{accounts.map((account) => <AccountCard key={account._id} account={account} balance={balances[account._id] ?? 0} />)}</div>}
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+              {accounts.map((account) => (
+                <AccountCard key={account._id} account={account} balance={balances[account._id] ?? 0} />
+              ))}
+            </div>
+          )}
         </div>
-        {!loading && accounts.length > 0 && <div id="activity" className="mt-8 scroll-mt-24 space-y-8"><TransferPanel accounts={accounts} token={token} onComplete={() => window.location.reload()} /><TransactionHistory transactions={transactions} accounts={accounts} /></div>}
-      </div>
+
+        {!loading && accounts.length > 0 && (
+          <div id="activity" className="mt-10 grid gap-8 scroll-mt-24 xl:grid-cols-[1.2fr_0.8fr]">
+            <TransferPanel accounts={accounts} token={token} onComplete={() => window.location.reload()} />
+            <TransactionHistory transactions={transactions} accounts={accounts} />
+          </div>
+        )}
+      </main>
     </div>
   );
 }

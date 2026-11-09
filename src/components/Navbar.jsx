@@ -23,7 +23,7 @@ function Navbar() {
       // Clear local auth even if the API is unavailable.
     } finally {
       localStorage.removeItem("token");
-      window.location.assign("/");
+      window.location.assign("/login");
     }
   };
 

@@ -39,7 +39,7 @@ function ErrorPage({ status = 404 }) {
   const retry = () => window.location.reload();
 
   return (
-    <main className="auth-shell min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+    <main id="main-content" tabIndex={-1} className="auth-shell min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="fixed top-4 right-4 z-10">
         <ThemeToggle />
       </div>
@@ -72,7 +72,7 @@ function ErrorPage({ status = 404 }) {
               </button>
             )}
             {status !== 404 && (
-              <Link to="/" className="btn-ghost-sm w-full sm:w-auto justify-center">
+              <Link to="/login" className="btn-ghost-sm w-full sm:w-auto justify-center">
                 Go home
               </Link>
             )}

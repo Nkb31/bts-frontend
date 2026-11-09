@@ -52,8 +52,11 @@ export default function Login() {
           </div>
           <div className="relative border-t border-white/15 pt-5 font-geist text-body-sm text-white/55">Bank Transaction System</div>
         </aside>
-        <main className="p-6 sm:p-9 lg:p-12">
-          <div className="mb-8 lg:mb-10"><div className="mb-6 inline-flex h-11 w-11 items-center justify-center rounded-md bg-ink text-on-primary lg:hidden"><FaBuilding className="text-base" /></div><h1 className="font-geist text-3xl font-medium tracking-tight text-ink sm:text-4xl">Welcome back</h1><p className="mt-2 font-geist text-body-md text-body">Sign in to your Bank Transaction System account.</p></div>
+        <main id="main-content" tabIndex={-1} className="p-6 sm:p-9 lg:p-12">
+          <Link to="/" className="mb-6 inline-flex min-h-11 items-center rounded-sm font-geist text-body-sm font-medium text-link transition-colors hover:text-link-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link">
+            ← Back to home
+          </Link>
+          <div className="mb-8 lg:mb-10"><div className="mb-6 inline-flex h-11 w-11 items-center justify-center rounded-md bg-ink text-on-primary lg:hidden"><FaBuilding className="text-base" /></div><div className="mb-3 inline-flex items-center gap-2 rounded-full border border-hairline bg-hairline-soft px-2.5 py-1 font-geist-mono text-[10px] font-medium uppercase tracking-[0.2em] text-mute">BTS • secure banking</div><h1 className="font-geist text-3xl font-medium tracking-tight text-ink sm:text-4xl">Welcome back</h1><p className="mt-2 font-geist text-body-md text-body">Sign in to your Bank Transaction System account and continue managing your money confidently.</p></div>
           {error && <div role="alert" aria-live="assertive" className="mb-6 rounded-sm border border-error bg-error-deep/10 px-4 py-3 font-geist text-body-sm text-error">{error}</div>}
           {notice && <div role="status" aria-live="polite" className="mb-6 rounded-sm border border-cyan bg-cyan-soft px-4 py-3 font-geist text-body-sm text-ink">{notice}</div>}
           {!requiresOtp ? <form onSubmit={handleSubmit} className="space-y-5" autoComplete="on">
